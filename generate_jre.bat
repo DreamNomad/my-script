@@ -15,6 +15,8 @@ set "JDK_HOME=%JAVA_HOME%"
 :: 设置输出的JRE文件夹名称，也用双引号括起来
 set "JRE_FOLDER=jre"
 
+java -version
+
 :: 询问用户是生成标准JRE还是基于JAR的JRE
 echo.
 echo 请选择生成JRE的类型：
@@ -27,8 +29,6 @@ if "%jreType%"=="2" goto jarBasedJRE
 
 :: 标准JRE生成流程
 goto standardJRE
-
-set "modules="
 
 :jarBasedJRE
 :: 列出当前文件夹下的所有JAR文件并编号
@@ -124,12 +124,12 @@ goto :createJRE
 :addModule
 set "newModule=%~1"
 if "!modules!" == "" (
-    set "modules=%newModule%"
+    set "modules=jdk.crypto.ec,!newModule!"
 ) else (
-    echo "!modules!" | findstr /C:"%newModule%" >nul
+    echo "!modules!" | findstr /C:"!newModule!" >nul
     if !errorlevel! neq 0 (
-        echo 添加：%newModule%模块
-        set "modules=!modules!,%newModule%"
+        echo 添加：!newModule!模块
+        set "modules=!modules!,!newModule!"
     )
 )
 goto :eof
